@@ -392,10 +392,10 @@ export async function getFeedbackList(req, res) {
       FROM survey_responses
       ${whereSql}
       ORDER BY ${safeSortBy} ${safeOrder}
-      LIMIT ? OFFSET ?;
+      LIMIT ${limitNum} OFFSET ${offset};
     `;
 
-    const records = await query(dataQuery, [...queryParams, limitNum, offset]);
+    const records = await query(dataQuery, queryParams);
 
     return res.json({
       success: true,
