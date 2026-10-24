@@ -1,0 +1,26 @@
+{
+  "name": "papido-booking-opinion-survey",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Production-ready standalone opinion survey platform for Papido ride booking",
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "server": "cd server && npm start",
+    "migrate": "cd server && npm run migrate",
+    "seed": "cd server && npm run seed",
+    "test:e2e": "node test-e2e.js"
+  },
+  "keywords": [
+    "papido",
+    "survey",
+    "booking",
+    "feedback",
+    "react",
+    "express",
+    "mysql"
+  ],
+  "author": "Papido Technologies",
+  "license": "ISC"
+}
