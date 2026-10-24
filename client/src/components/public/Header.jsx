@@ -42,20 +42,12 @@ export default function Header({ currentStep, onReset, newBookingUrl }) {
               href={newBookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
+              className="inline-flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
             >
               <span>Explore Website</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
-          
-          <a
-            href="/admin/login"
-            className="text-xs font-semibold text-slate-400 hover:text-slate-700 px-2 py-1 rounded transition-colors"
-            title="Admin Login"
-          >
-            Admin
-          </a>
         </div>
       </div>
     </header>
