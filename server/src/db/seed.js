@@ -57,11 +57,13 @@ export async function runSeeds() {
     console.log('[Seed] Admin user already exists. Skipping admin creation.');
   }
 
-  // 3. Optional: Seed realistic demo survey responses if database is completely empty
-  const existingResponses = await query('SELECT id FROM survey_responses LIMIT 1;');
-  if (existingResponses.length === 0) {
-    console.log('[Seed] Populating initial demo feedback responses for rich analytics demo...');
-    await seedDemoResponses();
+  // 3. Optional: Seed demo survey responses only if explicitly enabled via SEED_DEMO_DATA=true
+  if (process.env.SEED_DEMO_DATA === 'true') {
+    const existingResponses = await query('SELECT id FROM survey_responses LIMIT 1;');
+    if (existingResponses.length === 0) {
+      console.log('[Seed] Populating initial demo feedback responses...');
+      await seedDemoResponses();
+    }
   }
 
   console.log('[Seed] Database seeding completed successfully.');
