@@ -97,12 +97,25 @@ export default function AdminSettings() {
           </div>
         </div>
 
-        {/* Master Survey Switch */}
-        <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs space-y-3">
+        {/* Master Survey Switch: Enable / Disable New Responses */}
+        <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <h2 className="text-base font-bold text-slate-900">Public Survey Submissions</h2>
-              <p className="text-xs text-slate-500">Toggle whether riders can submit new opinions.</p>
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <h2 className="text-base font-bold text-slate-900">Accepting New Feedback Responses</h2>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                    surveyActive
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : 'bg-red-100 text-red-800 border border-red-300'
+                  }`}
+                >
+                  {surveyActive ? '🟢 Submissions Open' : '🔴 Submissions Paused'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500">
+                Master switch to enable or disable public survey submissions from riders.
+              </p>
             </div>
 
             <label className="relative inline-flex items-center cursor-pointer">
@@ -112,8 +125,24 @@ export default function AdminSettings() {
                 onChange={(e) => setSurveyActive(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+              <div className="w-12 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
             </label>
+          </div>
+
+          <div className={`p-3.5 rounded-2xl text-xs border ${
+            surveyActive 
+              ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900' 
+              : 'bg-amber-50/80 border-amber-200 text-amber-900'
+          }`}>
+            {surveyActive ? (
+              <span>
+                ✓ <strong>Public feedback is currently active:</strong> Riders can access the multi-step survey and submit opinions.
+              </span>
+            ) : (
+              <span>
+                ⚠️ <strong>Submissions are paused:</strong> The public website displays a polite notice that feedback intake is closed, and any API submissions will be rejected.
+              </span>
+            )}
           </div>
         </div>
 

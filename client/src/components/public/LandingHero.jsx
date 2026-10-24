@@ -1,7 +1,7 @@
 import React from 'react';
-import { Clock, ShieldCheck, ArrowRight, ExternalLink, Sparkles, MessageCircle, Globe } from 'lucide-react';
+import { Clock, ShieldCheck, ArrowRight, ExternalLink, Sparkles, MessageCircle, Globe, AlertCircle } from 'lucide-react';
 
-export default function LandingHero({ onStart, onExploreWebsite, newBookingUrl }) {
+export default function LandingHero({ onStart, onExploreWebsite, newBookingUrl, surveyActive = true }) {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10 animate-fade-in-up">
       {/* Top Badge */}
@@ -23,6 +23,19 @@ export default function LandingHero({ onStart, onExploreWebsite, newBookingUrl }
         </p>
       </div>
 
+      {/* Survey Paused Notice Banner */}
+      {!surveyActive && (
+        <div className="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 flex items-start space-x-3 text-xs sm:text-sm">
+          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block">Survey Submissions Paused</span>
+            <span>
+              Papido is currently reviewing incoming feedback and has temporarily closed new survey submissions. You can still explore our new booking website below!
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Time & Privacy Pills */}
       <div className="flex flex-wrap items-center justify-center gap-3 mt-6 text-xs sm:text-sm text-slate-500">
         <div className="flex items-center space-x-1.5 bg-slate-100/80 px-3 py-1.5 rounded-full border border-slate-200">
@@ -37,13 +50,19 @@ export default function LandingHero({ onStart, onExploreWebsite, newBookingUrl }
 
       {/* Action Buttons */}
       <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
-        <button
-          onClick={onStart}
-          className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 font-bold text-base shadow-lg shadow-amber-500/25 active:scale-[0.98] transition-all cursor-pointer"
-        >
-          <span>Share Your Opinion</span>
-          <ArrowRight className="w-5 h-5" />
-        </button>
+        {surveyActive ? (
+          <button
+            onClick={onStart}
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 font-bold text-base shadow-lg shadow-amber-500/25 active:scale-[0.98] transition-all cursor-pointer"
+          >
+            <span>Share Your Opinion</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        ) : (
+          <div className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 rounded-xl bg-slate-200 text-slate-500 font-semibold text-sm cursor-not-allowed">
+            <span>Submissions Currently Closed</span>
+          </div>
+        )}
 
         {newBookingUrl && (
           <button

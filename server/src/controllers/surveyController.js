@@ -3,6 +3,17 @@ import { generateUniqueFeedbackRef } from '../utils/referenceGenerator.js';
 
 export async function submitSurvey(req, res) {
   try {
+    // 0. Verify if public submissions are currently active
+    const activeSettingRows = await query(
+      "SELECT setting_value FROM app_settings WHERE setting_key = 'survey_active' LIMIT 1;"
+    );
+    if (activeSettingRows.length > 0 && activeSettingRows[0].setting_value === 'false') {
+      return res.status(403).json({
+        success: false,
+        message: 'Papido is not currently accepting new feedback responses at this time. Thank you for your interest!',
+      });
+    }
+
     const {
       // Step 1
       whatsapp_satisfaction,

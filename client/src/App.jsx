@@ -65,6 +65,7 @@ export default function App() {
   const [newBookingUrl, setNewBookingUrl] = useState(
     import.meta.env.VITE_NEW_BOOKING_URL || 'https://www.papido.online'
   );
+  const [surveyActive, setSurveyActive] = useState(true);
 
   // Survey Flow State
   const [currentStep, setCurrentStep] = useState(() => {
@@ -113,15 +114,20 @@ export default function App() {
     async function loadConfig() {
       try {
         const res = await api.getPublicSettings();
-        if (res.success && res.settings?.newBookingWebsiteUrl) {
-          setNewBookingUrl(res.settings.newBookingWebsiteUrl);
+        if (res.success && res.settings) {
+          if (res.settings.newBookingWebsiteUrl) {
+            setNewBookingUrl(res.settings.newBookingWebsiteUrl);
+          }
+          if (res.settings.surveyActive !== undefined) {
+            setSurveyActive(res.settings.surveyActive !== false);
+          }
         }
       } catch (err) {
         // Fallback to default
       }
     }
     loadConfig();
-  }, []);
+  }, [currentPath]);
 
   // Persist draft to local storage
   const updateFormData = (patch) => {
@@ -244,9 +250,16 @@ export default function App() {
         {/* Flow Steps */}
         {currentStep === 0 && (
           <LandingHero
-            onStart={() => handleStepChange(1)}
+            onStart={() => {
+              if (!surveyActive) {
+                setSubmitError('Papido is not currently accepting new feedback responses at this time.');
+                return;
+              }
+              handleStepChange(1);
+            }}
             onExploreWebsite={handleExploreWebsite}
             newBookingUrl={newBookingUrl}
+            surveyActive={surveyActive}
           />
         )}
 
