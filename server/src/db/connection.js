@@ -13,6 +13,7 @@ export async function ensureDatabaseExists() {
       port: config.db.port,
       user: config.db.user,
       password: config.db.password,
+      ssl: config.db.ssl ? { minVersion: 'TLSv1.2', rejectUnauthorized: true } : undefined,
     });
 
     await adminConnection.query(
@@ -39,6 +40,7 @@ export function getPool() {
       user: config.db.user,
       password: config.db.password,
       database: config.db.database,
+      ssl: config.db.ssl ? { minVersion: 'TLSv1.2', rejectUnauthorized: true } : undefined,
       waitForConnections: true,
       connectionLimit: config.db.connectionLimit,
       queueLimit: 0,

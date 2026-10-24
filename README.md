@@ -218,47 +218,50 @@ npm run test:e2e
 
 ---
 
-## 8. Production Deployment
+## 8. 100% Serverless Production Deployment (Vercel + TiDB Cloud)
 
-### Frontend Deployment (Vercel)
+You **do not need a separate server** (no Railway, no Render, no VPS required). The entire platform (React frontend + Express API + Database) runs 100% Serverless on **Vercel** connected directly to **TiDB Cloud Serverless**:
 
-The client is configured for zero-configuration Vercel deployment:
+### Step 1: Push Code to GitHub / GitLab
+```bash
+git add .
+git commit -m "feat: vercel serverless + tidb cloud integration"
+git push origin master
+```
 
-1. Push this repository to GitHub or GitLab.
-2. In the Vercel dashboard, click **"New Project"** and select the repository.
-3. Configure the project settings:
-   - **Root Directory:** `client`
-   - **Framework Preset:** Vite
-   - **Build Command:** `npm run build`
+### Step 2: Deploy to Vercel (1 Single Project)
+1. Open [vercel.com](https://vercel.com) and click **"Add New..." → "Project"**.
+2. Select your repository.
+3. Keep the default settings:
+   - **Root Directory:** `./` (leave empty / root)
+   - **Framework Preset:** Other (auto-detected via `vercel.json`)
+   - **Build Command:** `node scripts/build.js` (automatically set by `vercel.json`)
    - **Output Directory:** `dist`
-4. Add the environment variable:
-   - `VITE_API_URL`: Your live backend API URL (e.g. `https://api-survey.papido.online/api`)
-   - `VITE_NEW_BOOKING_URL`: `https://www.papido.online`
-5. Deploy. The included `client/vercel.json` ensures all deep routes (such as `/admin/dashboard`) route seamlessly to `index.html`.
+4. Add the following **Environment Variables** in the Vercel project dashboard:
 
-### Backend Deployment (VPS / Ubuntu / Docker / Render / Railway)
+| Variable Name | Value | Description |
+| :--- | :--- | :--- |
+| `DB_HOST` | `gateway01.ap-northeast-1.prod.aws.tidbcloud.com` | TiDB Cloud Gateway Host |
+| `DB_PORT` | `4000` | TiDB Cloud Port |
+| `DB_USER` | `2sCGEzv2NcPmfkU.root` | TiDB Username |
+| `DB_PASSWORD` | `uedySobVYzSG3Hhh` | TiDB Password |
+| `DB_NAME` | `papido_survey_db` | TiDB Database Name |
+| `DB_SSL` | `true` | Enforces mandatory TLS/SSL encryption |
+| `JWT_SECRET` | `papido_survey_jwt_secret_key_2026_super_secure_auth_991823` | Session encryption secret |
+| `NEW_BOOKING_WEBSITE_URL` | `https://www.papido.online` | Public website preview link |
+| `ADMIN_DEFAULT_EMAIL` | `admin@papido.online` | Initial admin email |
+| `ADMIN_DEFAULT_PASSWORD` | `Admin@Papido2026!` | Initial admin password |
 
-1. Ensure Node.js 18+ and MySQL 8.0 are installed on your host.
-2. Configure production environment variables in `server/.env`.
-3. Start using PM2 for automated restarts:
-   ```bash
-   cd server
-   npm install --production
-   npm run seed
-   pm2 start src/server.js --name "papido-survey-api"
-   pm2 save
-   ```
-4. Set up an Nginx reverse proxy with SSL (Certbot) pointing to port `5000`.
+5. Click **"Deploy"**. Vercel will build the frontend into `/dist` and package `/api/index.js` into an instant serverless function.
 
-### Custom Domain Configuration (`feedback.papido.online`)
-
-1. Go to your DNS provider (Cloudflare, Namecheap, GoDaddy, or Route 53).
-2. Add a `CNAME` record:
+### Step 3: Connect Custom Domain (`feedback.papido.online`)
+1. In your Vercel project dashboard, go to **Settings → Domains**.
+2. Enter `feedback.papido.online`.
+3. In your DNS provider (Cloudflare, GoDaddy, Namecheap, etc.), add a CNAME record:
    - **Type:** `CNAME`
-   - **Name:** `feedback`
-   - **Value:** `cname.vercel-dns.com` (for Vercel frontend)
-3. In your Vercel project settings under **Domains**, add `feedback.papido.online`.
-4. Vercel will automatically provision a free SSL certificate.
+   - **Name / Subdomain:** `feedback`
+   - **Target / Value:** `cname.vercel-dns.com`
+4. Vercel automatically generates a free SSL certificate. Both the website and the API will be live at `https://feedback.papido.online`.
 
 ---
 

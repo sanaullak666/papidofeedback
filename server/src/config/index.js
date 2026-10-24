@@ -1,19 +1,58 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import fs from 'fs';
+import path from 'path';
+
+// Load .env from root or server directory
+if (fs.existsSync('.env')) {
+  dotenv.config({ path: '.env' });
+} else if (fs.existsSync('server/.env')) {
+  dotenv.config({ path: 'server/.env' });
+} else if (fs.existsSync('../server/.env')) {
+  dotenv.config({ path: '../server/.env' });
+} else {
+  dotenv.config();
+}
+
+function parseDatabaseConfig() {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (databaseUrl) {
+    try {
+      const parsed = new URL(databaseUrl);
+      const isSsl = parsed.searchParams.has('ssl') || parsed.port === '4000' || process.env.DB_SSL === 'true';
+      return {
+        host: parsed.hostname,
+        port: parseInt(parsed.port || '3306', 10),
+        user: decodeURIComponent(parsed.username || 'root'),
+        password: decodeURIComponent(parsed.password || ''),
+        database: (parsed.pathname || '/papido_survey_db').replace(/^\//, '') || 'papido_survey_db',
+        ssl: isSsl,
+        connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
+      };
+    } catch (e) {
+      console.warn('[Config] Failed to parse DATABASE_URL, falling back to individual variables.');
+    }
+  }
+
+  const port = parseInt(process.env.DB_PORT || '3306', 10);
+  const isSsl = process.env.DB_SSL === 'true' || port === 4000;
+
+  return {
+    host: process.env.DB_HOST || '127.0.0.1',
+    port,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'papido_survey_db',
+    ssl: isSsl,
+    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
+  };
+}
 
 export const config = {
   port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   
-  db: {
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: parseInt(process.env.DB_PORT || '3306', 10),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'papido_survey_db',
-    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
-  },
+  db: parseDatabaseConfig(),
 
   jwt: {
     secret: process.env.JWT_SECRET || 'papido_survey_secret_default_key_change_me_in_prod',
