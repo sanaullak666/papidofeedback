@@ -29,11 +29,6 @@ export default function AdminLogin({ onNavigate }) {
     }
   };
 
-  const fillDemo = () => {
-    setEmail('admin@papido.online');
-    setPassword('Admin@Papido2026!');
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6 animate-fade-in-up">
@@ -117,23 +112,15 @@ export default function AdminLogin({ onNavigate }) {
           </button>
         </form>
 
-        {/* Demo Quick fill */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-          <button
-            type="button"
-            onClick={fillDemo}
-            className="text-amber-700 hover:text-amber-900 font-semibold underline cursor-pointer"
-          >
-            Auto-fill Default Admin Credentials
-          </button>
-
+        {/* Navigation to Public Survey */}
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-center text-xs">
           <button
             type="button"
             onClick={() => onNavigate('/')}
             className="text-slate-500 hover:text-slate-800 flex items-center space-x-1 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Public Survey</span>
+            <span>Return to Public Survey</span>
           </button>
         </div>
       </div>
