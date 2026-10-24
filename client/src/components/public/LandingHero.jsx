@@ -7,7 +7,14 @@ export default function LandingHero({ onStart, onExploreWebsite, newBookingUrl, 
       {/* Top Badge */}
       <div className="flex justify-center mb-6">
         <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-900 text-xs sm:text-sm font-semibold shadow-xs">
-          <span className="text-base">🚕</span>
+          <img
+            src="/papidologo.jpeg"
+            alt="Papido Logo"
+            className="w-4 h-4 rounded-full object-cover shrink-0 border border-amber-400/60"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
           <span>Papido Booking — Your Opinion Matters</span>
         </div>
       </div>
